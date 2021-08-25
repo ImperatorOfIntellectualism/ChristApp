@@ -1,0 +1,28 @@
+{
+  "name": "christapp_back",
+  "version": "1.0.0",
+  "description": "backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ImperatorOfIntellectualism/ChristApp.git"
+  },
+  "keywords": [
+    "backend"
+  ],
+  "author": "ImperatorOfIntellectualism",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ImperatorOfIntellectualism/ChristApp/issues"
+  },
+  "homepage": "https://github.com/ImperatorOfIntellectualism/ChristApp#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.13.7",
+    "nodemon": "^2.0.12"
+  }
+}

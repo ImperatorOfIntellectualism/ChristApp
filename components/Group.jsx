@@ -2,15 +2,14 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import styled from 'styled-components/native'
 
-const Group = ({groupTitle, items }) => {
-  console.log(items)
+const Group = ({groupTitle, items, navigate }) => {
 return(
 <GroupContainer>
         <GroupTitle>
           {groupTitle}
         </GroupTitle>
             {items.map(item => 
-        <GroupItem>
+        <GroupItem onPress={navigate.bind(this, 'ProfileScreen', {item: item})}>
           <Avatar source={{uri: item.uri}}>
           </Avatar>
           <View style={{paddingLeft: 10, flex: 1}}>
