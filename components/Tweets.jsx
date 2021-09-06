@@ -8,7 +8,7 @@ return(
     <Avatar source={{uri: profile.uri}}></Avatar>
     <TweetContainer>
     <NameContainer>
-    <FullName>{profile.fullName}</FullName>
+    <FullName>{profile.login}</FullName>
     <GrayText>{profile.subText}</GrayText>
     </NameContainer>
     <Tweet>{text}</Tweet>

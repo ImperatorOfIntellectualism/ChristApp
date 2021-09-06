@@ -3,13 +3,18 @@ const Schema = mongoose.Schema;
 
 const schema = new Schema(
   {
-    avatarUri: {
+    uri: {
       type: String,
       required: false,
+      default: null,
     },
-    fullName: {
+    login: {
         type: String,
         required: true,
+    },
+    password: {
+      type: String,
+      required: true,
     },
     subText: {
         type: String,

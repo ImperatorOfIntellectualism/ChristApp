@@ -7,26 +7,28 @@ import { FontAwesome5 } from '@expo/vector-icons';
 
 //TODO: Add description to a Group, add date of registration
 
-const ProfileScreen = ({navigation}) => {
-
-  const Profile = navigation.getParam("item")
-
+const ProfileScreen = ({navigation, route}) => {
+  const { item } = route.params;
+  console.log(item)
+  const Profile = item;
+  console.log(Profile)
+  if (Profile.uri == null) Profile.uri = "https://toppng.com/uploads/preview/question-mark-png-question-mark-gray-clipart-115632672906byhc3dzvb.png"
   const Container = styled.View`
-background-image: url(${Profile.uri});
-background-size: cover;
   flex: 1;
   padding-top: 60px;
-`;
+  `;
+  //background-size: cover;
+  //background-image: url(${Profile.uri});
 
   const [tweet, setTweet] = useState(1)
     return(
         <Container>
           <SubContainer>
           <Avatar source={{uri: Profile.uri}}></Avatar>
-      <FullName>{Profile.fullName}</FullName>
+      <FullName>{Profile.login}</FullName>
       <GrayText>{Profile.subText}</GrayText>
       <Description>I suck dicks regularly</Description>
-      <GrayText style={{marginTop: 15}}><FontAwesome5 name="calendar-alt" size={14} color="black" /> Joined</GrayText>
+      <GrayText style={{marginTop: 15}}><FontAwesome5 name="calendar-alt" size={14} color="black" /> Joined </GrayText>
       <ButtonContainer>
         <Button onPress={() => {}}><Text style={{color: "white"}}>BAKA</Text></Button>
         <CallButton><Feather name="phone-call" size={24} color="white" /></CallButton>
@@ -44,7 +46,7 @@ background-size: cover;
                   </Text>
                   </Tabutton>
                   </Tab>
-        <Tweets profile={Profile} text={tweet}></Tweets>
+      <Tweets profile={Profile} text={tweet}></Tweets>
     </Container>
     )
 }
@@ -61,12 +63,9 @@ flex-direction: row;
 `;
 
 const Tabutton = styled.TouchableOpacity`
-background-color: inherit;
-  cursor: pointer;
   padding: 14px 16px;
-  transition: 0.3s;
   borderRightWidth: 2;
-  borderRightColor: "#000000"
+  borderRightColor: #000000
 `;
 
 const Avatar = styled.Image`

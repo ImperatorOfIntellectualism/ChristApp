@@ -1,9 +1,9 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { ScrollView, Text } from "react-native";
 import styled from "styled-components/native";
 import Group from "../components/Group";
 import { Ionicons } from "@expo/vector-icons";
-import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Data = {
   Group1: {
@@ -12,14 +12,14 @@ const Data = {
       {
         time: "15:00",
         uri: "https://e1.pngegg.com/pngimages/411/363/png-clipart-goku-dbs-son-goku-thumbnail.png",
-        fullName: "AAAIIIEEE",
+        login: "AAAIIIEEE",
         subText: "JOBBER",
         active: true,
       },
       {
         time: "16:00",
         uri: "https://64.media.tumblr.com/e3544a46f7798594a2782ed4fd9574a7/eb916997e38a5008-12/s640x960/1f87b735cfa10d1c68e2a02689a1ed0ac9a1335f.jpg",
-        fullName: "CHAD",
+        login: "CHAD",
         subText: "GOD",
         active: false,
       },
@@ -30,15 +30,15 @@ const Data = {
     items: [
       {
         time: "15:00",
-        uri: "https://e1.pngegg.com/pngimages/411/363/png-clipart-goku-dbs-son-goku-thumbnail.png",
-        fullName: "AAAIIIEEE",
+        login: "AAAIIIEEE",
+        uri: null,
         subText: "JOBBER",
         active: true,
       },
       {
         time: "16:00",
         uri: "https://64.media.tumblr.com/e3544a46f7798594a2782ed4fd9574a7/eb916997e38a5008-12/s640x960/1f87b735cfa10d1c68e2a02689a1ed0ac9a1335f.jpg",
-        fullName: "CHAD",
+        login: "CHAD",
         subText: "GOD",
         active: false,
       },
@@ -47,38 +47,39 @@ const Data = {
 };
 
 const HomeScreen = ({ navigation }) => {
+
   return (
     <Container>
       <ScrollView>
         <Group
           groupTitle={Data.Group1.groupTitle}
           items={Data.Group1.items}
-          navigate={navigation.navigate}
+          navigation={navigation}
         />
         <Group
           groupTitle={Data.Group2.groupTitle}
           items={Data.Group2.items}
-          navigate={navigation.navigate}
+          navigation={navigation}
         />
         <Group
           groupTitle={Data.Group2.groupTitle}
           items={Data.Group2.items}
-          navigate={navigation.navigate}
+          navigation={navigation}
         />
         <Group
           groupTitle={Data.Group2.groupTitle}
           items={Data.Group2.items}
-          navigate={navigation.navigate}
+          navigation={navigation}
         />
         <Group
           groupTitle={Data.Group2.groupTitle}
           items={Data.Group2.items}
-          navigate={navigation.navigate}
+          navigation={navigation}
         />
         <Group
           groupTitle={Data.Group2.groupTitle}
           items={Data.Group2.items}
-          navigate={navigation.navigate}
+          navigation={navigation}
         />
       </ScrollView>
       <PlusButton>
@@ -90,7 +91,6 @@ const HomeScreen = ({ navigation }) => {
 
 const Container = styled.View`
   flex: 1;
-  margin-top: 5px;
 `;
 
 const PlusButton = styled.TouchableOpacity`
