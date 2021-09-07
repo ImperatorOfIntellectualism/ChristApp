@@ -3,10 +3,10 @@ const Schema = mongoose.Schema;
 
 const schema = new Schema(
   {
-    uri: {
-      type: String,
-      required: false,
-      default: null,
+    img:
+    {
+        data: Buffer,
+        contentType: String
     },
     login: {
         type: String,

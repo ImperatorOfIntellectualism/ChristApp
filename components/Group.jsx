@@ -9,7 +9,7 @@ return(
           {groupTitle}
         </GroupTitle>
             {items.map(item => 
-        <GroupItem onPress={() => {navigation.navigate('Profile', {item: item})}}>
+        <GroupItem key={item.id} onPress={() => {navigation.navigate('Profile', {item: item})}}>
           <Avatar source={{uri: item.uri}}>
           </Avatar>
           <View style={{paddingLeft: 10, flex: 1}}>

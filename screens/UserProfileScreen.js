@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, Text, TouchableOpacity, View, Platform } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View, Platform, Image } from "react-native";
 import styled from "styled-components/native";
 import Tweets from "../components/Tweets";
 import { Feather } from "@expo/vector-icons";
@@ -12,11 +12,12 @@ import * as ImagePicker from 'expo-image-picker';
 
 
 const UserProfileScreen = () => {
-  const [avatar, setAvatar] = useState(null)
+  const [image, setImage] = useState(null)
   const [photo, setPhoto] = useState(null);
   const [user, setUser] = useState(null);
-  useEffect(() => {
+  useEffect( async () => {
     
+
     const getUser = async () => {
       const userName = await AsyncStorage.getItem("Login");
       const user = await fetch("http://192.168.1.242:3000/getUser", {
@@ -30,33 +31,31 @@ const UserProfileScreen = () => {
       return user.json();
     };
     getUser().then((person) => {setUser(person);
-      console.log(person.login)
-      const getAvatar = async () => {
-        const ava = await fetch("http://192.168.1.242:3000/getAvatar", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name: person.login }),
-        })
-        return ava.blob()
-      };
-      getAvatar().then((Avatar)=>{setAvatar(URL.createObjectURL(Avatar))});
+      
+      const getImage = async () => {
+        const image = await fetch("http://192.168.1.242:3000/getImage", {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name: person.login }),
+          });
+          return image.text();
+        }
+        getImage().then((image) => {setImage(image)});
+
     });
   }, []);
 
   const Profile = user;
-  console.log(Profile);
   if (Profile != null) {
-    if (Profile.uri == null) {
-      Profile.uri =
-        "https://toppng.com/uploads/preview/question-mark-png-question-mark-gray-clipart-115632672906byhc3dzvb.png";
-    }
+
   }
 
   const [tweet, setTweet] = useState(1);
 
-  if (!!Profile) {
+  if (!!Profile && !!image) {
 
     const Container = styled.View`
     flex: 1;
@@ -88,19 +87,18 @@ async function takeAndUploadPhotoAsync() {
 
   return await fetch("http://192.168.1.242:3000/uploadImage", {
     method: 'POST',
-    body: formData,
+    body: formData
   });
 }
 
-console.log(avatar)
+console.log(image)
 
     return (
       <Container>
         <SubContainer>
           <TouchableOpacity style={{position: "absolute", top: -25}} onPress={()=>{takeAndUploadPhotoAsync()}}>
-          <Avatar
-            source={{ uri:  avatar}}
-          ></Avatar>
+            {!!image &&
+          <Avatar source={{ uri:  'data:image/png;base64,'+ image}}></Avatar>}
           </TouchableOpacity>
           <FullName>{Profile.login}</FullName>
           <GrayText>{Profile.subText}</GrayText>
@@ -110,7 +108,7 @@ console.log(avatar)
             {Profile.dateOfRegistration}
           </GrayText>
           <ButtonContainer>
-            <Button onPress={() => {}}>
+            <Button onPress={async() => { await AsyncStorage.removeItem('Login');}}>
               <Text style={{ color: "white" }}>BAKA</Text>
             </Button>
             <CallButton>
@@ -149,8 +147,8 @@ console.log(avatar)
         <Tweets profile={Profile} text={tweet}></Tweets>
       </Container>
     );
-  } else if (Profile == null) {
-    return <View></View>;
+  } else if (Profile == null || image == null) {
+    return <View><Text>KEKWAIT</Text></View>;
   }
 };
 

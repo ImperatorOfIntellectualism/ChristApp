@@ -5,7 +5,7 @@ import styled from 'styled-components/native'
 const Tweets = ({text, profile}) => {
 return(
     <Container>
-    <Avatar source={{uri: profile.uri}}></Avatar>
+    <Avatar src={{uri: profile.uri}}></Avatar>
     <TweetContainer>
     <NameContainer>
     <FullName>{profile.login}</FullName>
@@ -21,7 +21,6 @@ const Avatar = styled.Image`
   border-radius: 50px;
   width: 60px;
   height: 60px;
-  border: solid 2px #FFFFFF;
   margin-right: 10px;
 `;
 

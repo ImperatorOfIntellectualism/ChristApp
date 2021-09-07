@@ -10,6 +10,7 @@ const Data = {
     groupTitle: "14 Сентября",
     items: [
       {
+        id: 1,
         time: "15:00",
         uri: "https://e1.pngegg.com/pngimages/411/363/png-clipart-goku-dbs-son-goku-thumbnail.png",
         login: "AAAIIIEEE",
@@ -17,6 +18,7 @@ const Data = {
         active: true,
       },
       {
+        id: 2,
         time: "16:00",
         uri: "https://64.media.tumblr.com/e3544a46f7798594a2782ed4fd9574a7/eb916997e38a5008-12/s640x960/1f87b735cfa10d1c68e2a02689a1ed0ac9a1335f.jpg",
         login: "CHAD",
@@ -29,6 +31,7 @@ const Data = {
     groupTitle: "17 Сентября",
     items: [
       {
+        id: 3,
         time: "15:00",
         login: "AAAIIIEEE",
         uri: null,
@@ -36,6 +39,7 @@ const Data = {
         active: true,
       },
       {
+        id: 4,
         time: "16:00",
         uri: "https://64.media.tumblr.com/e3544a46f7798594a2782ed4fd9574a7/eb916997e38a5008-12/s640x960/1f87b735cfa10d1c68e2a02689a1ed0ac9a1335f.jpg",
         login: "CHAD",

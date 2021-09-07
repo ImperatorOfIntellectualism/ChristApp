@@ -14,6 +14,8 @@ const storage = multer.diskStorage({
     cb(null, file.originalname + ".jpg")
   }
 })
+const fs = require('fs');
+const path = require('path');
 const upload = multer({storage: storage})
 
 
@@ -80,13 +82,32 @@ app.post("/getUser", async (req, res) => {
 })
 
 app.post("/uploadImage", upload.single("photo"),(req, res)=>{
-  try {
-    console.log(req.file)
-    res.send("AIE")
-  } catch (error) {
-    console.log("AIE")
-    res.status(500).json({message: "Что-то пошло не так, ошибка: " + error})
-  }
+  User
+    .findOneAndUpdate({
+      login: req.file.originalname
+    },
+    {img: {
+      data: fs.readFileSync(path.join(__dirname + '/data/' + req.file.filename)),
+      contentType: 'image/jpg'
+  }}
+    )
+    .then(() => res.send(200))
+    .catch((error) => {
+      console.log(error);
+      res.send(500)
+    });
+})
+
+app.post("/getImage", (req, res)=>{
+  User
+    .findOne({
+      login: req.body.name
+    })
+    .then((user) => res.send(Buffer.from(user.img.data).toString("base64")))
+    .catch((error) => {
+      console.log(error);
+      res.send(500)
+    });
 })
 
   async function start() {
