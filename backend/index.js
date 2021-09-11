@@ -110,6 +110,35 @@ app.post("/getImage", (req, res)=>{
     });
 })
 
+app.post("/addDescription",(req, res)=>{
+  User
+    .findOneAndUpdate({
+      login: req.body.name
+    },
+    {description: req.body.description}
+    )
+    .then(() => res.send(200))
+    .catch((error) => {
+      console.log(error);
+      res.send(500)
+    });
+})
+
+app.post("/addTweet",(req, res)=>{
+  console.log(req.body.tweet)
+  User
+    .findOneAndUpdate({
+      login: req.body.name
+    },
+    { $push: { tweets: req.body.tweet  } }
+    )
+    .then(() => res.send(200))
+    .catch((error) => {
+      console.log(error);
+      res.send(500)
+    });
+})
+
   async function start() {
     try {
       await mongoose.connect((MONGO_URL), {

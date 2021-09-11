@@ -5,6 +5,7 @@ import Group from "../components/Group";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 const LoginScreen = ({ navigation }) => {
   const [name, setName] = useState(null)
   const [pass, setPass] = useState(null)
@@ -39,9 +40,11 @@ const LoginScreen = ({ navigation }) => {
             if (!response.ok) {
                 alert("Такого пользователя нет, проверьте данные")
             }
-            else await AsyncStorage.setItem('Login', name)
+            else {await AsyncStorage.setItem('Login', name)
+          }
         });
-        navigation.navigate("Home")} else alert("Введите данные")}}
+        navigation.navigate("Home")
+        } else alert("Введите данные")}}
         />
       </View>
       </Container>

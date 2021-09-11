@@ -27,6 +27,10 @@ const schema = new Schema(
     tweets: {
         type: Array,
         required: true
+    },
+    description: {
+      type: String,
+      required: false
     }
   },
   {

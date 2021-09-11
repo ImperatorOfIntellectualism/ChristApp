@@ -2,10 +2,11 @@ import React from 'react';
 import { Image, Text, View } from 'react-native';
 import styled from 'styled-components/native'
 
-const Tweets = ({text, profile}) => {
+const Tweets = ({text, profile, image}) => {
+
 return(
     <Container>
-    <Avatar src={{uri: profile.uri}}></Avatar>
+    <Avatar source={{uri: 'data:image/jpg;base64,' + image}}></Avatar>
     <TweetContainer>
     <NameContainer>
     <FullName>{profile.login}</FullName>
@@ -16,6 +17,7 @@ return(
     </Container>
 )
 }
+
 
 const Avatar = styled.Image`
   border-radius: 50px;
