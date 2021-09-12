@@ -125,12 +125,26 @@ app.post("/addDescription",(req, res)=>{
 })
 
 app.post("/addTweet",(req, res)=>{
-  console.log(req.body.tweet)
   User
     .findOneAndUpdate({
       login: req.body.name
     },
     { $push: { tweets: req.body.tweet  } }
+    )
+    .then(() => res.send(200))
+    .catch((error) => {
+      console.log(error);
+      res.send(500)
+    });
+})
+
+
+app.post("/deleteTweet",(req, res)=>{
+  User
+    .findOneAndUpdate({
+      login: req.body.name
+    },
+    { $pull: { tweets: req.body.tweet  } }
     )
     .then(() => res.send(200))
     .catch((error) => {
