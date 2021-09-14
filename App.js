@@ -56,8 +56,8 @@ return await user.json()
 
 function Root() {
   const [user, setUser] = useState(null);
-  useEffect(async () => {
-    setUser(await getUser());
+  useEffect(() => {
+    setUser(getUser().then((user)=>{return user}));
   }, []);
   return (
     <Tab.Navigator initialRouteName="Home">

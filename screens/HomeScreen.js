@@ -3,7 +3,6 @@ import { ScrollView, Text } from "react-native";
 import styled from "styled-components/native";
 import Group from "../components/Group";
 import { Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Data = {
   Group1: {
@@ -13,7 +12,7 @@ const Data = {
         id: 1,
         time: "15:00",
         uri: "https://e1.pngegg.com/pngimages/411/363/png-clipart-goku-dbs-son-goku-thumbnail.png",
-        login: "AAAIIIEEE",
+        login: "Kakarot",
         subText: "JOBBER",
         active: true,
       },

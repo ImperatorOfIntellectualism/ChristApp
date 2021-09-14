@@ -8,6 +8,15 @@ const schema = new Schema(
         data: Buffer,
         contentType: String
     },
+    followers:
+    {
+      type: Array,
+      required: true
+    },
+    follows:{
+      type: Array,
+      required: true
+    },
     login: {
         type: String,
         required: true,

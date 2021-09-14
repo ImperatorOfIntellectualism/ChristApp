@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import styled from 'styled-components/native'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Group = ({groupTitle, items, navigation }) => {
 return(
@@ -9,7 +10,7 @@ return(
           {groupTitle}
         </GroupTitle>
             {items.map(item => 
-        <GroupItem key={item.id} onPress={() => {navigation.navigate('Profile', {item: item})}}>
+        <GroupItem key={item.id} onPress={async () => {if (item.login == await AsyncStorage.getItem("Login")) {navigation.navigate('UserProfile')} else {navigation.navigate('Profile', {login: item.login})}}}>
           <Avatar source={{uri: item.uri}}>
           </Avatar>
           <View style={{paddingLeft: 10, flex: 1}}>

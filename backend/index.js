@@ -153,6 +153,36 @@ app.post("/deleteTweet",(req, res)=>{
     });
 })
 
+app.post("/follow",(req, res)=>{
+  User
+    .findOneAndUpdate({
+      login: req.body.followed
+    },
+    { $push: { followers: req.body.oneWhoFollows  } }
+    ).catch((err)=> console.log(err))
+    User
+      .findOneAndUpdate({
+        login: req.body.oneWhoFollows
+      },
+      { $push: { follows: req.body.followed  } }
+      ).catch((err)=> console.log(err))
+})
+
+app.post("/stopFollowing",(req, res)=>{
+  User
+    .findOneAndUpdate({
+      login: req.body.followed
+    },
+    { $pull: { followers: req.body.oneWhoFollows  } }
+    ).catch((err)=> console.log(err))
+    User
+      .findOneAndUpdate({
+        login: req.body.oneWhoFollows
+      },
+      { $pull: { follows: req.body.followed  } }
+      ).catch((err)=> console.log(err))
+})
+
   async function start() {
     try {
       await mongoose.connect((MONGO_URL), {

@@ -19,11 +19,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 
-//TODO: Add description to a Group, add date of registration
-
 const UserProfileScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisibility] = useState(false);
+  const [image, setImage] = useState(null);
+  const [user, setUser] = useState(null);
+  const [tweet, setTweet] = useState(1);
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -34,10 +35,7 @@ const UserProfileScreen = () => {
     wait(2000).then(() => setRefreshing(false));
   }, []);
 
-  const [image, setImage] = useState(null);
-  const [photo, setPhoto] = useState(null);
-  const [user, setUser] = useState(null);
-  useEffect(async () => {
+  useEffect(() => {
     const getUser = async () => {
       const userName = await AsyncStorage.getItem("Login");
       const user = await fetch("http://192.168.1.242:3000/getUser", {
@@ -72,8 +70,6 @@ const UserProfileScreen = () => {
 
   const Profile = user;
 
-  const [tweet, setTweet] = useState(1);
-
   if (!!Profile && !!image) {
     const Container = styled.View`
       flex: 1;
@@ -104,8 +100,6 @@ const UserProfileScreen = () => {
       });
     }
 
-    let txt = null;
-
     const putDescription = async () => {
       await fetch("http://192.168.1.242:3000/addDescription", {
         method: "POST",
@@ -135,10 +129,12 @@ const UserProfileScreen = () => {
           profile={Profile}
           image={image}
           text={tweet}
+          crossBool={true}
         ></Tweets>
       ));
     };
 
+    let txt = null;
     let tweetTxt = null;
 
     return (
@@ -204,6 +200,7 @@ const UserProfileScreen = () => {
                 </View>
               )}
             </Description>
+            <View style={{flexDirection: "row"}}><GrayText style={{fontSize: 18}}>Followers: </GrayText><Text style={{fontSize: 18, fontWeight: 800}}>{Profile.followers.length}</Text><GrayText style={{fontSize: 18, marginLeft: 15}}>Follows: </GrayText><Text style={{fontSize: 18, fontWeight: 800}}>{Profile.follows.length}</Text></View>
             <GrayText style={{ marginTop: 15 }}>
               <FontAwesome5 name="calendar-alt" size={14} color="black" />{" "}
               Joined {Profile.dateOfRegistration}
@@ -316,8 +313,8 @@ const UserProfileScreen = () => {
     );
   } else if (Profile == null || image == null) {
     return (
-      <View>
-        <Text>KEKWAIT</Text>
+      <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+        <Text>Loading...</Text>
       </View>
     );
   }
@@ -336,8 +333,8 @@ const Tab = styled.View`
 
 const Tabutton = styled.TouchableOpacity`
   padding: 14px 16px;
-  borderrightwidth: 2;
-  borderrightcolor: #000000;
+  borderRightWidth: 2;
+  borderRightColor: #000000;
 `;
 
 const Avatar = styled.Image`

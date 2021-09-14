@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 
-const Tweets = ({ text, profile, image }) => {
+const Tweets = ({ text, profile, image, crossBool }) => {
   const cross = "\u274C";
 
   return (
@@ -16,6 +16,7 @@ const Tweets = ({ text, profile, image }) => {
         <Tweet>{text}</Tweet>
       </TweetContainer>
       <View style={{ flex: 1 }}>
+        {crossBool &&
         <TouchableOpacity
           onPress={async () => {
             fetch("http://192.168.1.242:3000/deleteTweet", {
@@ -32,7 +33,7 @@ const Tweets = ({ text, profile, image }) => {
           }}
         >
           <Text style={{ alignSelf: "flex-end" }}>{cross}</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>}
       </View>
     </Container>
   );
