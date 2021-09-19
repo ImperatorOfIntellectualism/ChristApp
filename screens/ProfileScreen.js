@@ -19,9 +19,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 
-const ProfileScreen = ({navigation, route}) => {
-
-  const [currentUser, setCurrentUser] = useState(1)
+const ProfileScreen = ({ navigation, route }) => {
+  const [currentUser, setCurrentUser] = useState(1);
 
   const login = route.params.login;
   const [refreshing, setRefreshing] = useState(false);
@@ -49,7 +48,7 @@ const ProfileScreen = ({navigation, route}) => {
         },
         body: JSON.stringify({ name: userName }),
       });
-      setCurrentUser(await AsyncStorage.getItem('Login'))
+      setCurrentUser(await AsyncStorage.getItem("Login"));
       return user.json();
     };
     getUser().then((person) => {
@@ -99,28 +98,76 @@ const ProfileScreen = ({navigation, route}) => {
           source={{ uri: "data:image/jpg;base64," + image }}
         >
           <SubContainer>
-              {!!image && (
-                <Avatar
-                  source={{ uri: "data:image/jpg;base64," + image }}
-                ></Avatar>
-              )}
+            {!!image && (
+              <Avatar
+                source={{ uri: "data:image/jpg;base64," + image }}
+              ></Avatar>
+            )}
             <FullName>{Profile.login}</FullName>
             <GrayText>{Profile.subText}</GrayText>
-            <Description>
-              {Profile.description}
-            </Description>
-              <View style={{flexDirection: "row"}}><GrayText style={{fontSize: 18}}>Followers: </GrayText><Text style={{fontSize: 18, fontWeight: 800}}>{Profile.followers.length}</Text><GrayText style={{fontSize: 18, marginLeft: 15}}>Follows: </GrayText><Text style={{fontSize: 18, fontWeight: 800}}>{Profile.follows.length}</Text></View>
+            <Description>{Profile.description}</Description>
+            <View style={{ flexDirection: "row" }}>
+              <TouchableOpacity style={{flexDirection: "row"}} onPress={()=>{navigation.navigate("Followers", {Profile: Profile, option: 1})}}>
+              <GrayText style={{ fontSize: 18 }}>Followers: </GrayText>
+              <Text style={{ fontSize: 18, fontWeight: 800 }}>
+                {Profile.followers.length}
+              </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={()=>{navigation.navigate("Followers", {Profile: Profile, option: 2})}} style={{flexDirection: "row"}}>
+              <GrayText style={{ fontSize: 18, marginLeft: 15 }}>
+                Follows:
+              </GrayText>
+              <Text style={{ fontSize: 18, fontWeight: 800 }}>
+                {Profile.follows.length}
+              </Text>
+              </TouchableOpacity>
+            </View>
             <GrayText style={{ marginTop: 15 }}>
               <FontAwesome5 name="calendar-alt" size={14} color="black" />{" "}
               Joined {Profile.dateOfRegistration}
             </GrayText>
-            <ButtonContainer>{ !Profile.followers.includes(currentUser) && (<BlueButton onPress={async()=>{fetch("http://192.168.1.242:3000/follow", {method: "POST", headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          }, body: JSON.stringify({oneWhoFollows: currentUser, followed: Profile.login})})}}><Text style={{color: "#FFFFFF", fontSize: 20}}>Follow</Text></BlueButton>)}{ Profile.followers.includes(currentUser) && (<BlueButton onPress={async()=>{fetch("http://192.168.1.242:3000/stopFollowing", {method: "POST", headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          }, body: JSON.stringify({oneWhoFollows: currentUser, followed: Profile.login})})}}><Text style={{color: "#FFFFFF", fontSize: 20}}>Stop Following</Text></BlueButton>)}</ButtonContainer>
+            <ButtonContainer>
+              {!Profile.followers.includes(currentUser) && (
+                <BlueButton
+                  onPress={async () => {
+                    fetch("http://192.168.1.242:3000/follow", {
+                      method: "POST",
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        oneWhoFollows: currentUser,
+                        followed: Profile.login,
+                      }),
+                    });
+                  }}
+                >
+                  <Text style={{ color: "#FFFFFF", fontSize: 20 }}>Follow</Text>
+                </BlueButton>
+              )}
+              {Profile.followers.includes(currentUser) && (
+                <BlueButton
+                  onPress={async () => {
+                    fetch("http://192.168.1.242:3000/stopFollowing", {
+                      method: "POST",
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        oneWhoFollows: currentUser,
+                        followed: Profile.login,
+                      }),
+                    });
+                  }}
+                >
+                  <Text style={{ color: "#FFFFFF", fontSize: 20 }}>
+                    Stop Following
+                  </Text>
+                </BlueButton>
+              )}
+            </ButtonContainer>
           </SubContainer>
           <Tab>
             <Tabutton
@@ -162,7 +209,7 @@ const ProfileScreen = ({navigation, route}) => {
     );
   } else if (Profile == null || image == null) {
     return (
-      <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Loading...</Text>
       </View>
     );
@@ -182,8 +229,8 @@ const Tab = styled.View`
 
 const Tabutton = styled.TouchableOpacity`
   padding: 14px 16px;
-  borderRightWidth: 2;
-  borderRightColor: #000000;
+  borderrightwidth: 2;
+  borderrightcolor: #000000;
 `;
 
 const Avatar = styled.Image`

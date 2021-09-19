@@ -183,6 +183,19 @@ app.post("/stopFollowing",(req, res)=>{
       ).catch((err)=> console.log(err))
 })
 
+app.post("/getSearch",(req, res)=>{
+  User
+    .find({ login: { $regex: req.body.name, $options: "i" } })
+    .limit(5)
+    .then((list) => {
+      const array = []
+      for (let i = 0; i < list.length; i++){
+        array.push(list[i].login)
+      }
+      res.json(array);
+    });
+})
+
   async function start() {
     try {
       await mongoose.connect((MONGO_URL), {

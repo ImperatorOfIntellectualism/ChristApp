@@ -1,8 +1,9 @@
-import React, {useEffect} from "react";
-import { ScrollView, Text } from "react-native";
+import React, {useEffect, useState} from "react";
+import { ScrollView, Text, View, TextInput, FlatList } from "react-native";
 import styled from "styled-components/native";
 import Group from "../components/Group";
 import { Ionicons } from "@expo/vector-icons";
+import MiniProfile from '../components/MiniProfile'
 
 const Data = {
   Group1: {
@@ -51,9 +52,31 @@ const Data = {
 
 const HomeScreen = ({ navigation }) => {
 
+  const [list, setList] = useState(null)
+  const setUser = async (user) => {
+    let result = await fetch('http://192.168.1.242:3000/getSearch', {method: "POST", headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({name: user})})
+    return result.json()
+  }
+
+  const renderItem = ({ item }) => (
+    <MiniProfile profile={item} navigation={navigation}/>
+  );
+
+  const [txt, setText] = useState("Search...")
+
   return (
     <Container>
+      <TextInput style={{fontSize: 20}} value={txt} onChangeText={(text)=>{setText(text);(setUser(text).then((answer)=> {console.log(answer);setList(answer)}))}}></TextInput>
       <ScrollView>
+        {console.log(txt)}
+        {txt != "" &&
+        <FlatList data={list}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}></FlatList>}
         <Group
           groupTitle={Data.Group1.groupTitle}
           items={Data.Group1.items}
@@ -94,6 +117,7 @@ const HomeScreen = ({ navigation }) => {
 
 const Container = styled.View`
   flex: 1;
+  padding: 5px
 `;
 
 const PlusButton = styled.TouchableOpacity`

@@ -13,6 +13,7 @@ import LoginScreen from "./screens/LoginScreen";
 import UserProfileScreen from "./screens/UserProfileScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import FollowersScreen from "./screens/FollowersScreen";
 
 const Stack = createNativeStackNavigator();
 const navigationRef = createNavigationContainerRef();
@@ -77,6 +78,7 @@ function App() {
       <Stack.Navigator initialRouteName="Base">
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Registration" component={RegistrationScreen} />
+        <Stack.Screen name="Followers" component={FollowersScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen
           name="Base"
