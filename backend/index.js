@@ -81,6 +81,20 @@ app.post("/getUser", async (req, res) => {
 }
 })
 
+app.post("/getRandomUser", async (req, res) => {
+  try {
+    User.aggregate([
+      {
+        "$sample": {
+          "size": 5
+        }
+      }
+    ]).then((result)=>res.send(result))
+} catch(e){
+    res.status(500).json({message: "Что-то пошло не так, ошибка: " + e})
+}
+})
+
 app.post("/uploadImage", upload.single("photo"),(req, res)=>{
   User
     .findOneAndUpdate({

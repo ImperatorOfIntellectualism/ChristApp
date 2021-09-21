@@ -25,6 +25,7 @@ const UserProfileScreen = () => {
   const [image, setImage] = useState(null);
   const [user, setUser] = useState(null);
   const [tweet, setTweet] = useState(1);
+  const [date, setDate] = useState('')
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -36,6 +37,11 @@ const UserProfileScreen = () => {
   }, []);
 
   useEffect(() => {
+    const getDate = async () => {
+      return (await fetch("http://worldtimeapi.org/api/ip")).json()
+    }
+    getDate().then((date)=>{setDate(date.datetime.substring(0,10))})
+
     const getUser = async () => {
       const userName = await AsyncStorage.getItem("Login");
       const user = await fetch("http://192.168.1.242:3000/getUser", {
@@ -257,7 +263,7 @@ const UserProfileScreen = () => {
                       },
                       body: JSON.stringify({
                         name: Profile.login,
-                        tweet: tweetTxt,
+                        tweet: {tweetTxt: tweetTxt, tweetDate: date},
                       }),
                     });
                     setModalVisibility(false);

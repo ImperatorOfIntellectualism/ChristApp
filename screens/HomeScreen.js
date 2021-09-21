@@ -52,6 +52,29 @@ const Data = {
 
 const HomeScreen = ({ navigation }) => {
 
+  const [profile,setProfile] = useState(null)
+  const [date, setDate] = useState('')
+
+  useEffect(()=>{
+    const getUser = async () => {
+      const user = await fetch("http://192.168.1.242:3000/getRandomUser", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      return user.json();
+    };
+    getUser().then((person) => {
+      setProfile(person);})
+
+      const getDate = async () => {
+        return (await fetch("http://worldtimeapi.org/api/ip")).json()
+      }
+      getDate().then((date)=>{setDate(date.datetime.substring(0,10))})
+  },[])
+
   const [list, setList] = useState(null)
   const setUser = async (user) => {
     let result = await fetch('http://192.168.1.242:3000/getSearch', {method: "POST", headers: {
@@ -68,9 +91,10 @@ const HomeScreen = ({ navigation }) => {
 
   const [txt, setText] = useState("Search...")
 
+  if(profile != null) {
   return (
     <Container>
-      <TextInput style={{fontSize: 20}} value={txt} onChangeText={(text)=>{setText(text);(setUser(text).then((answer)=> {console.log(answer);setList(answer)}))}}></TextInput>
+      <TextInput style={{fontSize: 20, borderRadius: 40, backgroundColor: "#DADADA", paddingLeft: 10, marginBottom: 10}} value={txt} onChangeText={(text)=>{setText(text);(setUser(text).then((answer)=> {console.log(answer);setList(answer)}))}}></TextInput>
       <ScrollView>
         {console.log(txt)}
         {txt != "" &&
@@ -78,33 +102,8 @@ const HomeScreen = ({ navigation }) => {
         renderItem={renderItem}
         keyExtractor={item => item.id}></FlatList>}
         <Group
-          groupTitle={Data.Group1.groupTitle}
-          items={Data.Group1.items}
-          navigation={navigation}
-        />
-        <Group
-          groupTitle={Data.Group2.groupTitle}
-          items={Data.Group2.items}
-          navigation={navigation}
-        />
-        <Group
-          groupTitle={Data.Group2.groupTitle}
-          items={Data.Group2.items}
-          navigation={navigation}
-        />
-        <Group
-          groupTitle={Data.Group2.groupTitle}
-          items={Data.Group2.items}
-          navigation={navigation}
-        />
-        <Group
-          groupTitle={Data.Group2.groupTitle}
-          items={Data.Group2.items}
-          navigation={navigation}
-        />
-        <Group
-          groupTitle={Data.Group2.groupTitle}
-          items={Data.Group2.items}
+          groupTitle={date}
+          items={profile}
           navigation={navigation}
         />
       </ScrollView>
@@ -113,7 +112,8 @@ const HomeScreen = ({ navigation }) => {
       </PlusButton>
     </Container>
   );
-};
+} else {return (<View></View>)}
+}
 
 const Container = styled.View`
   flex: 1;

@@ -4,6 +4,7 @@ import styled from 'styled-components/native'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Group = ({groupTitle, items, navigation }) => {
+
 return(
 <GroupContainer>
         <GroupTitle>
@@ -11,13 +12,14 @@ return(
         </GroupTitle>
             {items.map(item => 
         <GroupItem key={item.id} onPress={async () => {if (item.login == await AsyncStorage.getItem("Login")) {navigation.navigate('UserProfile')} else {navigation.navigate('Profile', {login: item.login})}}}>
-          <Avatar source={{uri: item.uri}}>
+          {console.log(item.img.data)}
+          <Avatar source={{uri: "data:image/jpg;base64," + item.img.data }}>
           </Avatar>
           <View style={{paddingLeft: 10, flex: 1}}>
           <FullName>{item.login}</FullName>
           <GrayText>{item.subText}</GrayText>
           </View>
-          <GroupData active={item.active}>{item.time}</GroupData>
+          <GroupData active={true}>{"AIE"}</GroupData>
         </GroupItem>)}
       </GroupContainer>
 )

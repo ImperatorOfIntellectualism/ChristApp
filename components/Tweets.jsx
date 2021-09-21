@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 
@@ -12,8 +12,9 @@ const Tweets = ({ text, profile, image, crossBool }) => {
         <NameContainer>
           <FullName>{profile.login}</FullName>
           <GrayText>{profile.subText}</GrayText>
+          <GrayText>{text.tweetDate}</GrayText>
         </NameContainer>
-        <Tweet>{text}</Tweet>
+        <Tweet>{text.tweetTxt}</Tweet>
       </TweetContainer>
       <View style={{ flex: 1 }}>
         {crossBool &&
@@ -54,7 +55,7 @@ const FullName = styled.Text`
 `;
 
 const GrayText = styled.Text`
-  font-size: 24px;
+  font-size: 14px;
   color: #c0c0c0;
   line-height: 30px;
   margin-left: 10px;
