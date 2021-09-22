@@ -12,7 +12,6 @@ return(
         </GroupTitle>
             {items.map(item => 
         <GroupItem key={item.id} onPress={async () => {if (item.login == await AsyncStorage.getItem("Login")) {navigation.navigate('UserProfile')} else {navigation.navigate('Profile', {login: item.login})}}}>
-          {console.log(item.img.data)}
           <Avatar source={{uri: "data:image/jpg;base64," + item.img.data }}>
           </Avatar>
           <View style={{paddingLeft: 10, flex: 1}}>

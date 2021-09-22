@@ -17,6 +17,10 @@ const schema = new Schema(
       type: Array,
       required: true
     },
+    likes:{
+      type: Array,
+      required: true
+    },
     login: {
         type: String,
         required: true,

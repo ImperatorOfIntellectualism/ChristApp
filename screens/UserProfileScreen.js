@@ -99,7 +99,6 @@ const UserProfileScreen = () => {
 
       let formData = new FormData();
       formData.append("photo", { uri: localUri, name: user.login, type });
-      console.log(formData);
       return await fetch("http://192.168.1.242:3000/uploadImage", {
         method: "POST",
         body: formData,
@@ -114,17 +113,6 @@ const UserProfileScreen = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ name: user.login, description: txt }),
-      });
-    };
-
-    const addTweet = async () => {
-      await fetch("http://192.168.1.242:3000/addTweet", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name: user.login, tweet: txt }),
       });
     };
 

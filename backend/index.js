@@ -152,6 +152,49 @@ app.post("/addTweet",(req, res)=>{
     });
 })
 
+app.post("/findTweet",(req, res)=>{
+  User.findOne(
+    {
+      login: req.body.name
+    },
+    function(err, result) {
+      if (err) {
+        res.send(err);
+      } else {
+        const item = result.tweets.find( x => x.tweetTxt === req.body.tweet)
+        res.send(item);
+      }
+    }
+  );
+})
+
+app.post("/likeTweet",(req, res)=>{
+  User
+  .findOneAndUpdate({
+    login: req.body.name
+  },
+  { $push: { likes: req.body.tweet  } }
+  )
+  .then(() => res.send(200))
+  .catch((error) => {
+    console.log(error);
+    res.send(500)
+  });
+})
+
+app.post("/dislikeTweet",(req, res)=>{
+  User
+  .findOneAndUpdate({
+    login: req.body.name
+  },
+  { $pull: { likes: req.body.tweet  } }
+  )
+  .then(() => res.send(200))
+  .catch((error) => {
+    console.log(error);
+    res.send(500)
+  });
+})
 
 app.post("/deleteTweet",(req, res)=>{
   User

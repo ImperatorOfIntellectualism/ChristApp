@@ -1,9 +1,35 @@
 import React, {useEffect, useState} from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AntDesign } from '@expo/vector-icons';
 
 const Tweets = ({ text, profile, image, crossBool }) => {
   const cross = "\u274C";
+  const [user, setUser] = useState(null)
+  const [like, setLike] = useState(false)
+  useEffect(()=>{
+    const getUser = async () => {
+      const userName = await AsyncStorage.getItem("Login");
+      const user = await fetch("http://192.168.1.242:3000/getUser", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: userName }),
+      });
+      return user.json();
+    };
+    getUser().then((person) => {
+      setUser(person);})
+  }, [])
+
+  if(!!user){
+    if(like != true){
+  if(user.likes.find( x => x.tweetTxt === text.tweetTxt)){setLike(true)}
+    }
+  }
 
   return (
     <Container>
@@ -15,6 +41,21 @@ const Tweets = ({ text, profile, image, crossBool }) => {
           <GrayText>{text.tweetDate}</GrayText>
         </NameContainer>
         <Tweet>{text.tweetTxt}</Tweet>
+        {like && <TouchableOpacity onPress={()=>{fetch("http://192.168.1.242:3000/dislikeTweet", {method: "POST", headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                name: user.login,
+                tweet: text,
+              }),}); setLike(false)}}><AntDesign style={{paddingLeft: 5}} name="heart" size={16} color="red" /></TouchableOpacity>}{!like && <TouchableOpacity onPress={()=>{fetch("http://192.168.1.242:3000/likeTweet", {method: "POST", headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                name: user.login,
+                tweet: text,
+              }),}); setLike(true) }}><AntDesign style={{paddingLeft: 5}} name="hearto" size={16} color="black" /></TouchableOpacity>}
       </TweetContainer>
       <View style={{ flex: 1 }}>
         {crossBool &&
@@ -30,7 +71,7 @@ const Tweets = ({ text, profile, image, crossBool }) => {
                 name: profile.login,
                 tweet: text,
               }),
-            });
+            }); 
           }}
         >
           <Text style={{ alignSelf: "flex-end" }}>{cross}</Text>
@@ -48,6 +89,7 @@ const Avatar = styled.Image`
 `;
 
 const FullName = styled.Text`
+padding-left: 5px;
   font-weight: 800;
   font-size: 24px;
   line-height: 30px;
@@ -80,7 +122,7 @@ const Container = styled.View`
 `;
 
 const Tweet = styled.Text`
-  margin: 0;
+margin-top: 25px;
   padding: 5px;
   background-color: white;
 `;
