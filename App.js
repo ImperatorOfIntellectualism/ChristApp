@@ -14,6 +14,9 @@ import UserProfileScreen from "./screens/UserProfileScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FollowersScreen from "./screens/FollowersScreen";
+import  store  from './redux/store'
+import { Provider } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 const Stack = createNativeStackNavigator();
 const navigationRef = createNavigationContainerRef();
@@ -68,11 +71,16 @@ function Root() {
   );
 }
 
-function App() {
+function InnerApp(){
+  const count = useSelector((state) => state.counter.value)
+
+  const [update, setUpdate] = useState(count)
   const [user, setUser] = useState(null);
-  useEffect(async () => {
-    setUser(await findUser());
-  }, []);
+  useEffect( () => {
+    setUpdate(count)
+    const useIt = async () => {setUser(await findUser());}
+    useIt()
+  }, [count]);
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator initialRouteName="Base">
@@ -107,6 +115,15 @@ function App() {
         </ButtonContainer>
       )}
     </NavigationContainer>
+  );
+}
+
+function App() {
+
+  return (
+    <Provider store={store}>
+      <InnerApp></InnerApp>
+    </Provider>
   );
 }
 

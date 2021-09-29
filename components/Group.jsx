@@ -3,8 +3,8 @@ import { Text, View } from 'react-native';
 import styled from 'styled-components/native'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Group = ({groupTitle, items, navigation }) => {
-
+const Group = ({groupTitle, items, navigation, user }) => {
+  if (user != null){
 return(
 <GroupContainer>
         <GroupTitle>
@@ -18,11 +18,30 @@ return(
           <FullName>{item.login}</FullName>
           <GrayText>{item.subText}</GrayText>
           </View>
-          <GroupData active={true}>{"AIE"}</GroupData>
+          {item.login != user.login &&
+          <GroupData active={true}>{user.follows.includes(item.login) && "Followed"}{!user.follows.includes(item.login) && "Follow"}</GroupData>}
         </GroupItem>)}
       </GroupContainer>
 )
 }
+return(
+  <GroupContainer>
+          <GroupTitle>
+            {groupTitle}
+          </GroupTitle>
+              {items.map(item => 
+          <GroupItem key={item.id} onPress={async () => {if (item.login == await AsyncStorage.getItem("Login")) {navigation.navigate('UserProfile')} else {navigation.navigate('Profile', {login: item.login})}}}>
+            <Avatar source={{uri: "data:image/jpg;base64," + item.img.data }}>
+            </Avatar>
+            <View style={{paddingLeft: 10, flex: 1}}>
+            <FullName>{item.login}</FullName>
+            <GrayText>{item.subText}</GrayText>
+            </View>
+          </GroupItem>)}
+        </GroupContainer>
+  )
+}
+
 
 Group.defaultProps = {
   groupTitle: 'Untitled',

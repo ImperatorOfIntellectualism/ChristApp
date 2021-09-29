@@ -126,6 +126,7 @@ const ProfileScreen = ({ navigation, route }) => {
               <FontAwesome5 name="calendar-alt" size={14} color="black" />{" "}
               Joined {Profile.dateOfRegistration}
             </GrayText>
+            {!!currentUser &&
             <ButtonContainer>
               {!Profile.followers.includes(currentUser) && (
                 <BlueButton
@@ -167,7 +168,7 @@ const ProfileScreen = ({ navigation, route }) => {
                   </Text>
                 </BlueButton>
               )}
-            </ButtonContainer>
+            </ButtonContainer>}
           </SubContainer>
           <Tab>
             <Tabutton

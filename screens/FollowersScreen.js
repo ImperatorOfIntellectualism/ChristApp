@@ -21,13 +21,13 @@ const FollowersScreen = ({ navigation, route }) => {
 
   const FollowerList = () => {
     return Profile.followers.map((follower) => (
-      <MiniProfile profile={follower}></MiniProfile>
+      <MiniProfile profile={follower} navigation={navigation}></MiniProfile>
     ));
   };
 
   const FollowsList = () => {
     return Profile.follows.map((follow) => (
-      <MiniProfile profile={follow}></MiniProfile>
+      <MiniProfile profile={follow} navigation={navigation}></MiniProfile>
     ));
   };
 

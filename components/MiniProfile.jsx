@@ -1,13 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, {useState, useEffect} from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Button, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 
 const MiniProfile = ({ profile, navigation}) => {
 const [user, setUser] = useState(null)
 const [image, setImage] = useState(null)
-
-  console.log(profile)
 
   useEffect(() => {
     const getUser = async () => {
@@ -16,7 +14,7 @@ const [image, setImage] = useState(null)
       return user.json()
     }
     getUser().then((user)=>{setUser(user)})
-
+    
     const getImage = async () => {
       const avatar = await fetch("http://192.168.1.242:3000/getImage", {
         method: "POST",

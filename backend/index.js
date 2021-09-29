@@ -75,7 +75,7 @@ app.post("/getUser", async (req, res) => {
     if (candidate) {
       res.send(candidate)
     }
-    else res.status(400).json({message: "Такого пользователя нет"})
+    else res.send(null)
 } catch(e){
     res.status(500).json({message: "Что-то пошло не так, ошибка: " + e})
 }

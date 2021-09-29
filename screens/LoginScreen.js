@@ -4,9 +4,16 @@ import styled from "styled-components/native";
 import Group from "../components/Group";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector, useDispatch } from 'react-redux'
+import { decrement, increment } from '../redux/slice'
+import { CommonActions } from '@react-navigation/native';
 
 
 const LoginScreen = ({ navigation }) => {
+  const count = useSelector((state) => state.counter.value)
+  const dispatch = useDispatch()
+  console.log(count)
+
   const [name, setName] = useState(null)
   const [pass, setPass] = useState(null)
     return (
@@ -27,6 +34,7 @@ const LoginScreen = ({ navigation }) => {
           placeholderTextColor='white'
           onChangeText={(text)=>{setPass(text)}}
         />
+        <Button onPress={()=>{dispatch(increment())}}/>
         <Button
           title='Sign Up'
           onPress={async ()=>{if(name != null && pass != null) { await fetch("http://192.168.1.242:3000/login", {
@@ -43,7 +51,9 @@ const LoginScreen = ({ navigation }) => {
             else {await AsyncStorage.setItem('Login', name)
           }
         });
-        navigation.navigate("Home")
+        navigation.dispatch(CommonActions.goBack());
+        dispatch(increment())
+        console.log("CUCK")
         } else alert("Введите данные")}}
         />
       </View>

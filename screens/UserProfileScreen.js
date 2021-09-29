@@ -19,7 +19,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 
-const UserProfileScreen = () => {
+const UserProfileScreen = ({navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisibility] = useState(false);
   const [image, setImage] = useState(null);
@@ -194,7 +194,20 @@ const UserProfileScreen = () => {
                 </View>
               )}
             </Description>
-            <View style={{flexDirection: "row"}}><GrayText style={{fontSize: 18}}>Followers: </GrayText><Text style={{fontSize: 18, fontWeight: 800}}>{Profile.followers.length}</Text><GrayText style={{fontSize: 18, marginLeft: 15}}>Follows: </GrayText><Text style={{fontSize: 18, fontWeight: 800}}>{Profile.follows.length}</Text></View>
+            <View style={{flexDirection: "row"}}><TouchableOpacity style={{flexDirection: "row"}} onPress={()=>{navigation.navigate("Followers", {Profile: Profile, option: 1})}}>
+              <GrayText style={{ fontSize: 18 }}>Followers: </GrayText>
+              <Text style={{ fontSize: 18, fontWeight: 800 }}>
+                {Profile.followers.length}
+              </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={()=>{navigation.navigate("Followers", {Profile: Profile, option: 2})}} style={{flexDirection: "row"}}>
+              <GrayText style={{ fontSize: 18, marginLeft: 15 }}>
+                Follows:
+              </GrayText>
+              <Text style={{ fontSize: 18, fontWeight: 800 }}>
+                {Profile.follows.length}
+              </Text>
+              </TouchableOpacity></View>
             <GrayText style={{ marginTop: 15 }}>
               <FontAwesome5 name="calendar-alt" size={14} color="black" />{" "}
               Joined {Profile.dateOfRegistration}

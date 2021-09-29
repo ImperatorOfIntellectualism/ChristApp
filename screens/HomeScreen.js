@@ -4,58 +4,34 @@ import styled from "styled-components/native";
 import Group from "../components/Group";
 import { Ionicons } from "@expo/vector-icons";
 import MiniProfile from '../components/MiniProfile'
-
-const Data = {
-  Group1: {
-    groupTitle: "14 Сентября",
-    items: [
-      {
-        id: 1,
-        time: "15:00",
-        uri: "https://e1.pngegg.com/pngimages/411/363/png-clipart-goku-dbs-son-goku-thumbnail.png",
-        login: "Kakarot",
-        subText: "JOBBER",
-        active: true,
-      },
-      {
-        id: 2,
-        time: "16:00",
-        uri: "https://64.media.tumblr.com/e3544a46f7798594a2782ed4fd9574a7/eb916997e38a5008-12/s640x960/1f87b735cfa10d1c68e2a02689a1ed0ac9a1335f.jpg",
-        login: "CHAD",
-        subText: "GOD",
-        active: false,
-      },
-    ],
-  },
-  Group2: {
-    groupTitle: "17 Сентября",
-    items: [
-      {
-        id: 3,
-        time: "15:00",
-        login: "AAAIIIEEE",
-        uri: null,
-        subText: "JOBBER",
-        active: true,
-      },
-      {
-        id: 4,
-        time: "16:00",
-        uri: "https://64.media.tumblr.com/e3544a46f7798594a2782ed4fd9574a7/eb916997e38a5008-12/s640x960/1f87b735cfa10d1c68e2a02689a1ed0ac9a1335f.jpg",
-        login: "CHAD",
-        subText: "GOD",
-        active: false,
-      },
-    ],
-  },
-};
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSelector, useDispatch } from 'react-redux'
 
 const HomeScreen = ({ navigation }) => {
-
+  const count = useSelector((state) => state.counter.value)
+  
+  const [update,setUpdate] = useState(count)
   const [profile,setProfile] = useState(null)
   const [date, setDate] = useState('')
+  const [trueUser, setTrueUser] = useState(null)
 
   useEffect(()=>{
+    setUpdate(count)
+    const getProfile = async () => {
+      const userName = await AsyncStorage.getItem("Login");
+      const user = await fetch("http://192.168.1.242:3000/getUser", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: userName }),
+      });
+      return user.json();
+    };
+    getProfile().then((person) => {
+      setTrueUser(person);})
+
     const getUser = async () => {
       const user = await fetch("http://192.168.1.242:3000/getRandomUser", {
         method: "POST",
@@ -73,7 +49,7 @@ const HomeScreen = ({ navigation }) => {
         return (await fetch("http://worldtimeapi.org/api/ip")).json()
       }
       getDate().then((date)=>{setDate(date.datetime.substring(0,10))})
-  },[])
+  },[count])
 
   const [list, setList] = useState(null)
   const setUser = async (user) => {
@@ -91,6 +67,12 @@ const HomeScreen = ({ navigation }) => {
 
   const [txt, setText] = useState("Search...")
 
+  const FollowsList = () => {
+    return trueUser.follows.map((follow) => (
+      <MiniProfile profile={follow} navigation={navigation}></MiniProfile>
+    ));
+  };
+console.log(trueUser)
   if(profile != null) {
   return (
     <Container>
@@ -104,8 +86,13 @@ const HomeScreen = ({ navigation }) => {
         <Group
           groupTitle={date}
           items={profile}
+          user={trueUser}
           navigation={navigation}
         />
+        {!!trueUser &&
+        <View>
+        <GroupTitle>People that you follow:</GroupTitle>
+        <FollowsList></FollowsList></View>}
       </ScrollView>
       <PlusButton>
         <Ionicons name="add-circle-outline" size={38} color="black" />
@@ -118,6 +105,14 @@ const HomeScreen = ({ navigation }) => {
 const Container = styled.View`
   flex: 1;
   padding: 5px
+`;
+
+const GroupTitle = styled.Text`
+padding-left: 20px;
+padding-bottom: 10px;
+  font-weight: 800;
+  font-size: 22px;
+  color: #000000;
 `;
 
 const PlusButton = styled.TouchableOpacity`
