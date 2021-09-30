@@ -26,7 +26,7 @@ const ProfileScreen = ({ navigation, route }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [image, setImage] = useState(null);
   const [user, setUser] = useState(null);
-  const [tweet, setTweet] = useState(1);
+  const [tweetState, setTweetState] = useState(1);
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -79,13 +79,14 @@ const ProfileScreen = ({ navigation, route }) => {
     `;
 
     const TweetList = () => {
-      return Profile.tweets.map((tweet) => (
+      return Profile.tweets.reverse().map((tweet) => (
         <Tweets
           key={tweet}
           profile={Profile}
           image={image}
           text={tweet}
           crossBool={false}
+          tweetState={tweetState}
         ></Tweets>
       ));
     };
@@ -173,28 +174,28 @@ const ProfileScreen = ({ navigation, route }) => {
           <Tab>
             <Tabutton
               style={{
-                borderBottomColor: tweet == 1 ? "#43a8f0" : "#000000",
-                borderBottomWidth: tweet == 1 ? 2 : 0,
+                borderBottomColor: tweetState == 1 ? "#43a8f0" : "#000000",
+                borderBottomWidth: tweetState == 1 ? 2 : 0,
               }}
               onPress={() => {
-                setTweet(1);
+                setTweetState(1);
               }}
             >
-              <Text style={{ color: tweet == 1 ? "#43a8f0" : "#000000" }}>
-                KEKWAIT
+              <Text style={{ color: tweetState == 1 ? "#43a8f0" : "#000000" }}>
+              Tweets
               </Text>
             </Tabutton>
             <Tabutton
               style={{
-                borderBottomColor: tweet == 2 ? "#43a8f0" : "#000000",
-                borderBottomWidth: tweet == 2 ? 2 : 0,
+                borderBottomColor: tweetState == 2 ? "#43a8f0" : "#000000",
+                borderBottomWidth: tweetState == 2 ? 2 : 0,
               }}
               onPress={() => {
-                setTweet(2);
+                setTweetState(2);
               }}
             >
-              <Text style={{ color: tweet == 2 ? "#43a8f0" : "#000000" }}>
-                SUKAAA
+              <Text style={{ color: tweetState == 2 ? "#43a8f0" : "#000000" }}>
+              Tweets & replies
               </Text>
             </Tabutton>
           </Tab>
@@ -229,12 +230,17 @@ const Tab = styled.View`
 `;
 
 const Tabutton = styled.TouchableOpacity`
+flex: 1;
+align-items: center;
+    justify-content: center;
   padding: 14px 16px;
   borderrightwidth: 2;
   borderrightcolor: #000000;
 `;
 
 const Avatar = styled.Image`
+position: "absolute"; 
+top: -50;
   left: 5px;
   border-radius: 50px;
   width: 60px;
@@ -247,7 +253,7 @@ const FullName = styled.Text`
   font-size: 24px;
   line-height: 30px;
   margin-bottom: 1px;
-  margin-top: 10px;
+  margin-top: -50px;
 `;
 
 const CallButton = styled.TouchableOpacity`

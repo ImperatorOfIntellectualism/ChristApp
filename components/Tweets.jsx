@@ -3,12 +3,24 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from '@expo/vector-icons';
+import { useSelector, useDispatch } from 'react-redux'
+import { decrement, increment } from '../redux/slice'
 
-const Tweets = ({ text, profile, image, crossBool }) => {
+const Tweets = ({ text, profile, image, crossBool, tweetState }) => {
   const cross = "\u274C";
+  const count = useSelector((state) => state.counter.value)
+  const dispatch = useDispatch()
+
+  let trueState = 1
+  const refCheck = text.tweetTxt.split(' ')
+  for (let i = 0; i < refCheck.length; i++){
+    if(refCheck[i][0] == '@') trueState = 2;
+  }
   const [user, setUser] = useState(null)
+  const [update, setUpdate] = useState(count);
   const [like, setLike] = useState(false)
   useEffect(()=>{
+    setUpdate(count)
     const getUser = async () => {
       const userName = await AsyncStorage.getItem("Login");
       if (username != null) {
@@ -25,7 +37,7 @@ const Tweets = ({ text, profile, image, crossBool }) => {
     getUser().then((person) => {
       setUser(person);})
     }
-  }, [])
+  }, [count])
 
   if(user != null){
     if(like != true){
@@ -33,6 +45,7 @@ const Tweets = ({ text, profile, image, crossBool }) => {
     }
   }
 
+  if(tweetState == 1 && trueState == 1 || trueState == 2){
   return (
     <Container>
       <Avatar source={{ uri: "data:image/jpg;base64," + image }}></Avatar>
@@ -73,7 +86,8 @@ const Tweets = ({ text, profile, image, crossBool }) => {
                 name: profile.login,
                 tweet: text,
               }),
-            }); 
+            })
+            dispatch(increment()); 
           }}
         >
           <Text style={{ alignSelf: "flex-end" }}>{cross}</Text>
@@ -81,6 +95,61 @@ const Tweets = ({ text, profile, image, crossBool }) => {
       </View>
     </Container>
   );
+        }
+        else if (tweetState == 2 && trueState == 2){
+          return (
+            <Container>
+              <Avatar source={{ uri: "data:image/jpg;base64," + image }}></Avatar>
+              <TweetContainer>
+                <NameContainer>
+                  <FullName>{profile.login}</FullName>
+                  <GrayText>{profile.subText}</GrayText>
+                  <GrayText>{text.tweetDate}</GrayText>
+                </NameContainer>
+                <Tweet>{text.tweetTxt}</Tweet>
+                {like && !crossBool && user != null && <TouchableOpacity onPress={()=>{fetch("http://192.168.1.242:3000/dislikeTweet", {method: "POST", headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        name: user.login,
+                        tweet: text,
+                      }),}); setLike(false)}}><AntDesign style={{paddingLeft: 5}} name="heart" size={16} color="red" /></TouchableOpacity>}{!like && !crossBool && user != null && <TouchableOpacity onPress={()=>{fetch("http://192.168.1.242:3000/likeTweet", {method: "POST", headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        name: user.login,
+                        tweet: text,
+                      }),}); setLike(true) }}><AntDesign style={{paddingLeft: 5}} name="hearto" size={16} color="black" /></TouchableOpacity>}
+              </TweetContainer>
+              <View style={{ flex: 1 }}>
+                {crossBool &&
+                <TouchableOpacity
+                  onPress={async () => {
+                    fetch("http://192.168.1.242:3000/deleteTweet", {
+                      method: "POST",
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        name: profile.login,
+                        tweet: text,
+                      }),
+                    })
+                    dispatch(increment()); 
+                  }}
+                >
+                  <Text style={{ alignSelf: "flex-end" }}>{cross}</Text>
+                </TouchableOpacity>}
+              </View>
+            </Container>
+          );
+        }
+        else if (tweetState == 2 && trueState == 1){
+          return (<View></View>)
+        }
 };
 
 const Avatar = styled.Image`

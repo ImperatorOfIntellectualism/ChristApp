@@ -18,13 +18,19 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
+import { useSelector, useDispatch } from 'react-redux'
+import { decrement, increment } from '../redux/slice'
 
 const UserProfileScreen = ({navigation}) => {
+  const count = useSelector((state) => state.counter.value)
+  const dispatch = useDispatch()
+
+  const [update, setUpdate] = useState(count);
   const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisibility] = useState(false);
   const [image, setImage] = useState(null);
   const [user, setUser] = useState(null);
-  const [tweet, setTweet] = useState(1);
+  const [tweetState, setTweetState] = useState(1);
   const [date, setDate] = useState('')
 
   const wait = (timeout) => {
@@ -37,6 +43,7 @@ const UserProfileScreen = ({navigation}) => {
   }, []);
 
   useEffect(() => {
+    setUpdate(count)
     const getDate = async () => {
       return (await fetch("http://worldtimeapi.org/api/ip")).json()
     }
@@ -72,7 +79,7 @@ const UserProfileScreen = ({navigation}) => {
         setImage(image);
       });
     });
-  }, []);
+  }, [count]);
 
   const Profile = user;
 
@@ -117,13 +124,14 @@ const UserProfileScreen = ({navigation}) => {
     };
 
     const TweetList = () => {
-      return Profile.tweets.map((tweet) => (
+      return Profile.tweets.reverse().map((tweet) => (
         <Tweets
           key={tweet}
           profile={Profile}
           image={image}
           text={tweet}
           crossBool={true}
+          tweetState={tweetState}
         ></Tweets>
       ));
     };
@@ -174,6 +182,7 @@ const UserProfileScreen = ({navigation}) => {
                     title={"Save"}
                     onPress={async () => {
                       putDescription();
+                      dispatch(increment())
                     }}
                   ></Button>
                 </View>
@@ -189,6 +198,7 @@ const UserProfileScreen = ({navigation}) => {
                     onPress={async () => {
                       txt = null;
                       putDescription();
+                      dispatch(increment())
                     }}
                   ></Button>
                 </View>
@@ -226,6 +236,8 @@ const UserProfileScreen = ({navigation}) => {
               <CallButton
                 onPress={async () => {
                   await AsyncStorage.removeItem("Login");
+                  dispatch(increment())
+                  navigation.navigate("Home")
                 }}
               >
                 <Feather name="phone-call" size={24} color="white" />
@@ -268,6 +280,7 @@ const UserProfileScreen = ({navigation}) => {
                       }),
                     });
                     setModalVisibility(false);
+                    dispatch(increment())
                   }
                   else alert("Enter your tweet")
                   }}
@@ -280,28 +293,28 @@ const UserProfileScreen = ({navigation}) => {
           <Tab>
             <Tabutton
               style={{
-                borderBottomColor: tweet == 1 ? "#43a8f0" : "#000000",
-                borderBottomWidth: tweet == 1 ? 2 : 0,
+                borderBottomColor:tweetState== 1 ? "#43a8f0" : "#000000",
+                borderBottomWidth:tweetState== 1 ? 2 : 0,
               }}
               onPress={() => {
-                setTweet(1);
+                setTweetState(1);
               }}
             >
-              <Text style={{ color: tweet == 1 ? "#43a8f0" : "#000000" }}>
-                KEKWAIT
+              <Text style={{ color:tweetState== 1 ? "#43a8f0" : "#000000" }}>
+                Tweets
               </Text>
             </Tabutton>
             <Tabutton
               style={{
-                borderBottomColor: tweet == 2 ? "#43a8f0" : "#000000",
-                borderBottomWidth: tweet == 2 ? 2 : 0,
+                borderBottomColor:tweetState== 2 ? "#43a8f0" : "#000000",
+                borderBottomWidth:tweetState== 2 ? 2 : 0,
               }}
               onPress={() => {
-                setTweet(2);
+                setTweetState(2);
               }}
             >
-              <Text style={{ color: tweet == 2 ? "#43a8f0" : "#000000" }}>
-                SUKAAA
+              <Text style={{color:tweetState== 2 ? "#43a8f0" : "#000000" }}>
+                Tweets & replies
               </Text>
             </Tabutton>
           </Tab>
@@ -339,6 +352,9 @@ const Tab = styled.View`
 `;
 
 const Tabutton = styled.TouchableOpacity`
+flex: 1;
+align-items: center;
+    justify-content: center;
   padding: 14px 16px;
   borderRightWidth: 2;
   borderRightColor: #000000;
