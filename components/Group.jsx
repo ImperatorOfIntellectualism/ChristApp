@@ -4,6 +4,9 @@ import styled from 'styled-components/native'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Group = ({groupTitle, items, navigation, user }) => {
+  const language = navigator.language
+  const InnerText = language == "en" ? ["Follow:", 'Followed'] : ["Читать", "Читаемый"];
+  console.log(items)
   if (user != null){
 return(
 <GroupContainer>
@@ -11,7 +14,7 @@ return(
           {groupTitle}
         </GroupTitle>
             {items.map(item => 
-        <GroupItem key={item.id} onPress={async () => {if (item.login == await AsyncStorage.getItem("Login")) {navigation.navigate('UserProfile')} else {navigation.navigate('Profile', {login: item.login})}}}>
+        <GroupItem key={item.login} onPress={async () => {if (item.login == await AsyncStorage.getItem("Login")) {navigation.navigate('UserProfile')} else {navigation.navigate('Profile', {login: item.login})}}}>
           <Avatar source={{uri: "data:image/jpg;base64," + item.img.data }}>
           </Avatar>
           <View style={{paddingLeft: 10, flex: 1}}>
@@ -19,7 +22,7 @@ return(
           <GrayText>{item.subText}</GrayText>
           </View>
           {item.login != user.login &&
-          <GroupData active={true}>{user.follows.includes(item.login) && "Followed"}{!user.follows.includes(item.login) && "Follow"}</GroupData>}
+          <GroupData active={true}>{user.follows.includes(item.login) && InnerText[1]}{!user.follows.includes(item.login) && InnerText[0]}</GroupData>}
         </GroupItem>)}
       </GroupContainer>
 )
@@ -30,7 +33,7 @@ return(
             {groupTitle}
           </GroupTitle>
               {items.map(item => 
-          <GroupItem key={item.id} onPress={async () => {if (item.login == await AsyncStorage.getItem("Login")) {navigation.navigate('UserProfile')} else {navigation.navigate('Profile', {login: item.login})}}}>
+          <GroupItem key={item.login} onPress={async () => {if (item.login == await AsyncStorage.getItem("Login")) {navigation.navigate('UserProfile')} else {navigation.navigate('Profile', {login: item.login})}}}>
             <Avatar source={{uri: "data:image/jpg;base64," + item.img.data }}>
             </Avatar>
             <View style={{paddingLeft: 10, flex: 1}}>
@@ -75,7 +78,7 @@ border-radius: 18px;
 font-weight: 600;
 color: ${props => props.active ? "#FFFFFF;" : "#00499C;"};;
 font-size: 15px;
-width: 70px;
+width: 90px;
 height: 32px;
 text-align: center;
 line-height; 28px;

@@ -18,16 +18,20 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
+import { useSelector, useDispatch } from 'react-redux'
+import { decrement, increment } from '../redux/slice'
 
 const ProfileScreen = ({ navigation, route }) => {
+  const language = navigator.language
+  const InnerText = language == "en" ? ["Followers:", 'Follows: ','Joined ','Follow','Stop Following','Tweets','Tweets & Replies'] : ["Читатели:", 'Читаемые: ','Присоединился ',"Читать","Перестать читать","Твиты","Твиты & Ответы"];
   const [currentUser, setCurrentUser] = useState(1);
-
   const login = route.params.login;
   const [refreshing, setRefreshing] = useState(false);
   const [image, setImage] = useState(null);
   const [user, setUser] = useState(null);
   const [tweetState, setTweetState] = useState(1);
-
+  const count = useSelector((state) => state.counter.value)
+  const dispatch = useDispatch()
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
@@ -69,7 +73,7 @@ const ProfileScreen = ({ navigation, route }) => {
         setImage(image);
       });
     });
-  }, []);
+  }, [count]);
 
   const Profile = user;
 
@@ -81,7 +85,7 @@ const ProfileScreen = ({ navigation, route }) => {
     const TweetList = () => {
       return Profile.tweets.reverse().map((tweet) => (
         <Tweets
-          key={tweet}
+          key={tweet.tweetTxt}
           profile={Profile}
           image={image}
           text={tweet}
@@ -109,23 +113,23 @@ const ProfileScreen = ({ navigation, route }) => {
             <Description>{Profile.description}</Description>
             <View style={{ flexDirection: "row" }}>
               <TouchableOpacity style={{flexDirection: "row"}} onPress={()=>{navigation.navigate("Followers", {Profile: Profile, option: 1})}}>
-              <GrayText style={{ fontSize: 18 }}>Followers: </GrayText>
-              <Text style={{ fontSize: 18, fontWeight: 800 }}>
+              <GrayText style={{ fontSize: 18 }}>{InnerText[0]} </GrayText>
+              <Text style={{ fontSize: 18, fontWeight: '800' }}>
                 {Profile.followers.length}
               </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={()=>{navigation.navigate("Followers", {Profile: Profile, option: 2})}} style={{flexDirection: "row"}}>
               <GrayText style={{ fontSize: 18, marginLeft: 15 }}>
-                Follows:
+              {InnerText[1]} 
               </GrayText>
-              <Text style={{ fontSize: 18, fontWeight: 800 }}>
+              <Text style={{ fontSize: 18, fontWeight: '800' }}>
                 {Profile.follows.length}
               </Text>
               </TouchableOpacity>
             </View>
             <GrayText style={{ marginTop: 15 }}>
               <FontAwesome5 name="calendar-alt" size={14} color="black" />{" "}
-              Joined {Profile.dateOfRegistration}
+              {InnerText[2]}{Profile.dateOfRegistration}
             </GrayText>
             {!!currentUser &&
             <ButtonContainer>
@@ -143,9 +147,10 @@ const ProfileScreen = ({ navigation, route }) => {
                         followed: Profile.login,
                       }),
                     });
+                    dispatch(increment())
                   }}
                 >
-                  <Text style={{ color: "#FFFFFF", fontSize: 20 }}>Follow</Text>
+                  <Text style={{ color: "#FFFFFF", fontSize: 20 }}>{InnerText[3]}</Text>
                 </BlueButton>
               )}
               {Profile.followers.includes(currentUser) && (
@@ -162,10 +167,11 @@ const ProfileScreen = ({ navigation, route }) => {
                         followed: Profile.login,
                       }),
                     });
+                    dispatch(increment())
                   }}
                 >
                   <Text style={{ color: "#FFFFFF", fontSize: 20 }}>
-                    Stop Following
+                  {InnerText[4]}
                   </Text>
                 </BlueButton>
               )}
@@ -182,7 +188,7 @@ const ProfileScreen = ({ navigation, route }) => {
               }}
             >
               <Text style={{ color: tweetState == 1 ? "#43a8f0" : "#000000" }}>
-              Tweets
+              {InnerText[5]}
               </Text>
             </Tabutton>
             <Tabutton
@@ -195,7 +201,7 @@ const ProfileScreen = ({ navigation, route }) => {
               }}
             >
               <Text style={{ color: tweetState == 2 ? "#43a8f0" : "#000000" }}>
-              Tweets & replies
+              {InnerText[6]}
               </Text>
             </Tabutton>
           </Tab>
@@ -234,18 +240,18 @@ flex: 1;
 align-items: center;
     justify-content: center;
   padding: 14px 16px;
-  borderrightwidth: 2;
-  borderrightcolor: #000000;
+  borderRightWidth: 2px;
+  borderRightColor: #000000;
 `;
 
 const Avatar = styled.Image`
-position: "absolute"; 
-top: -50;
+top: -50px;
   left: 5px;
   border-radius: 50px;
   width: 60px;
   height: 60px;
-  border: solid 2px #ffffff;
+  borderWidth: 2px;
+  borderColor: #ffffff;
 `;
 
 const FullName = styled.Text`
@@ -291,18 +297,6 @@ const SubContainer = styled.View`
   background: #ffffff;
   padding: 25px;
   padding-bottom: 0px;
-`;
-
-const PlusButton = styled.TouchableOpacity`
-  position: absolute;
-  bottom: 5%;
-  right: 5%;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50px;
-  width: 64px;
-  height: 64px;
-  background: #2a86ff;
 `;
 
 ProfileScreen.navigationOptions = {

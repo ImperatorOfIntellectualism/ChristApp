@@ -48,7 +48,7 @@ async function findUser() {
 
 async function getUser() {
   const userName = await AsyncStorage.getItem("Login");
-  const user = await fetch("http://127.0.0.1:3000/getUser", {method: 'POST',
+  const user = await fetch("http://192.168.1.242:3000/getUser", {method: 'POST',
   headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json'
@@ -72,7 +72,7 @@ function Root() {
 }
 
 function InnerApp(){
-
+  const InnerText = navigator.language == 'en' ? ["Sing Up", 'Log In'] : ['Зарегистрироваться', "Войти"]
   const count = useSelector((state) => state.counter.value)
   const [update, setUpdate] = useState(count)
   const [user, setUser] = useState(null);
@@ -103,7 +103,7 @@ function InnerApp(){
             }}
           >
             <Text style={{ color: "#FFFFFF", fontSize: 22 }}>
-              Зарегистрироваться
+              {InnerText[0]}
             </Text>
           </Button>
           <Button
@@ -111,7 +111,7 @@ function InnerApp(){
               navigate("Login");
             }}
           >
-            <Text style={{ color: "#FFFFFF", fontSize: 22 }}>Войти</Text>
+            <Text style={{ color: "#FFFFFF", fontSize: 22 }}>{InnerText[1]}</Text>
           </Button>
         </ButtonContainer>
       )}
@@ -129,6 +129,3 @@ function App() {
 }
 
 export default App;
-
-//TASKS:
-//1) Change EXIT button 2) Mobile test

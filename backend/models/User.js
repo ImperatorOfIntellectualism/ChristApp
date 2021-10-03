@@ -6,7 +6,7 @@ const schema = new Schema(
     img:
     {
         data: Buffer,
-        contentType: String
+        contentType: String,
     },
     followers:
     {

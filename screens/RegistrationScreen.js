@@ -5,6 +5,8 @@ import Group from "../components/Group";
 import { Ionicons } from "@expo/vector-icons";
 
 const RegistrationScreen = ({ navigation }) => {
+  const language = navigator.language
+  const InnerText = language == "en" ? ["Username", 'Password', 'Repeat the password', 'Sign Up'] : ["Логин", 'Пароль','Повторите пароль',"Зарегистрироваться"];
   const [name, setName] = useState(null)
   const [pass, setPass] = useState(null)
   const [pass2, setPass2] = useState(null)
@@ -13,14 +15,14 @@ const RegistrationScreen = ({ navigation }) => {
         <View style={styles.container}>
         <TextInput
           style={styles.input}
-          placeholder='Username'
+          placeholder={InnerText[0]}
           autoCapitalize="none"
           placeholderTextColor='white'
           onChangeText={(text)=>{setName(text)}}
         />
         <TextInput
           style={styles.input}
-          placeholder='Password'
+          placeholder={InnerText[1]}
           secureTextEntry={true}
           autoCapitalize="none"
           placeholderTextColor='white'
@@ -28,14 +30,14 @@ const RegistrationScreen = ({ navigation }) => {
         />
         <TextInput
           style={styles.input}
-          placeholder='Password2'
+          placeholder={InnerText[2]}
           secureTextEntry={true}
           autoCapitalize="none"
           placeholderTextColor='white'
           onChangeText={(text)=>{setPass2(text)}}
         />
         <Button
-          title='Sign Up'
+          title={InnerText[3]}
           onPress={()=>{if(pass == pass2) {fetch("http://192.168.1.242:3000/register", {
             method: 'POST',
             headers: {

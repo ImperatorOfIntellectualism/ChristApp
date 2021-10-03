@@ -1,44 +1,37 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState } from "react";
 import {
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Platform,
-  Image,
-  RefreshControl,
-  TextInput,
-  Button,
-  ImageBackground,
 } from "react-native";
 import MiniProfile from '../components/MiniProfile'
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const FollowersScreen = ({ navigation, route }) => {
   const [option, setOption] = useState(route.params.option);
   const Profile = route.params.Profile
+  const language = navigator.language
+  const InnerText = language == "en" ? ["Followers", 'Follows'] : ["Читатели", 'Читаемые'];
 
   const FollowerList = () => {
     return Profile.followers.map((follower) => (
-      <MiniProfile profile={follower} navigation={navigation}></MiniProfile>
+      <MiniProfile key={follower} profile={follower} navigation={navigation}></MiniProfile>
     ));
   };
 
   const FollowsList = () => {
     return Profile.follows.map((follow) => (
-      <MiniProfile profile={follow} navigation={navigation}></MiniProfile>
+      <MiniProfile key={follow} profile={follow} navigation={navigation}></MiniProfile>
     ));
   };
-
   return (
     <View>
       <View style={styles.Tab}>
         <TouchableOpacity onPress={()=>{setOption(1)}} style={option == 1 ? styles.TabuttonChosen : styles.Tabutton}>
-          <Text style={option == 1 ? styles.TextButtonChosen : styles.TextButton}>Followers</Text>
+          <Text style={option == 1 ? styles.TextButtonChosen : styles.TextButton}>{InnerText[0]}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={()=>{setOption(2)}} style={option == 2 ? styles.TabuttonChosen : styles.Tabutton}>
-          <Text style={option == 2 ? styles.TextButtonChosen : styles.TextButton}>Follows</Text>
+          <Text style={option == 2 ? styles.TextButtonChosen : styles.TextButton}>{InnerText[1]}</Text>
         </TouchableOpacity>
       </View>
       {option == 1 ? <FollowerList></FollowerList> : <FollowsList></FollowsList>}

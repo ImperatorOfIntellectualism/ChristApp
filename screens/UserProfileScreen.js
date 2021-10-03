@@ -24,7 +24,8 @@ import { decrement, increment } from '../redux/slice'
 const UserProfileScreen = ({navigation}) => {
   const count = useSelector((state) => state.counter.value)
   const dispatch = useDispatch()
-
+  const language = navigator.language
+  const InnerText = language == "en" ? ["Followers:", 'Follows: ','Joined ','Tweets','Tweets & Replies', 'Change','Save', "Write a Tweet!", "Close", "Enter your Tweet", 'Enter your Tweet', 'Enter your description'] : ["Читатели:", 'Читаемые: ','Присоединился ',"Твиты","Твиты & Ответы", 'Изменить','Сохранить', "Написать Твит!", "Закрыть", "Введите Твит", 'Введите твит', "Введите описание"];
   const [update, setUpdate] = useState(count);
   const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisibility] = useState(false);
@@ -126,7 +127,7 @@ const UserProfileScreen = ({navigation}) => {
     const TweetList = () => {
       return Profile.tweets.reverse().map((tweet) => (
         <Tweets
-          key={tweet}
+          key={tweet.tweetTxt}
           profile={Profile}
           image={image}
           text={tweet}
@@ -137,7 +138,7 @@ const UserProfileScreen = ({navigation}) => {
     };
 
     let txt = null;
-    let tweetTxt = null;
+    let tweetTxt = InnerText[9];
 
     return (
       <Container>
@@ -172,14 +173,14 @@ const UserProfileScreen = ({navigation}) => {
                 >
                   <TextInput
                     style={{ fontSize: 18, lineHeight: 35 }}
-                    defaultValue={"Enter your description"}
+                    defaultValue={InnerText[11]}
                     onChangeText={(text) => {
                       txt = text;
                     }}
                   ></TextInput>
                   <Button
                     style={{ marginLeft: 15 }}
-                    title={"Save"}
+                    title={InnerText[6]}
                     onPress={async () => {
                       putDescription();
                       dispatch(increment())
@@ -194,7 +195,7 @@ const UserProfileScreen = ({navigation}) => {
                   </Text>
                   <Button
                     style={{ marginLeft: 15 }}
-                    title={"Change"}
+                    title={InnerText[5]}
                     onPress={async () => {
                       txt = null;
                       putDescription();
@@ -205,22 +206,22 @@ const UserProfileScreen = ({navigation}) => {
               )}
             </Description>
             <View style={{flexDirection: "row"}}><TouchableOpacity style={{flexDirection: "row"}} onPress={()=>{navigation.navigate("Followers", {Profile: Profile, option: 1})}}>
-              <GrayText style={{ fontSize: 18 }}>Followers: </GrayText>
-              <Text style={{ fontSize: 18, fontWeight: 800 }}>
+              <GrayText style={{ fontSize: 18 }}>{InnerText[0]} </GrayText>
+              <Text style={{ fontSize: 18, fontWeight: '800' }}>
                 {Profile.followers.length}
               </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={()=>{navigation.navigate("Followers", {Profile: Profile, option: 2})}} style={{flexDirection: "row"}}>
               <GrayText style={{ fontSize: 18, marginLeft: 15 }}>
-                Follows:
+              {InnerText[1]} 
               </GrayText>
-              <Text style={{ fontSize: 18, fontWeight: 800 }}>
+              <Text style={{ fontSize: 18, fontWeight: '800' }}>
                 {Profile.follows.length}
               </Text>
               </TouchableOpacity></View>
             <GrayText style={{ marginTop: 15 }}>
               <FontAwesome5 name="calendar-alt" size={14} color="black" />{" "}
-              Joined {Profile.dateOfRegistration}
+              {InnerText[2]}{Profile.dateOfRegistration}
             </GrayText>
             <ButtonContainer>
               <BlueButton
@@ -231,7 +232,7 @@ const UserProfileScreen = ({navigation}) => {
                   {setModalVisibility(false)}
                 }}
               >
-                <Text style={{ color: "white" }}>{modalVisible && "Close"}{!modalVisible && "Write a Tweet!"}</Text>
+                <Text style={{ color: "white" }}>{modalVisible && InnerText[8]}{!modalVisible && InnerText[7]}</Text>
               </BlueButton>
               <CallButton
                 onPress={async () => {
@@ -240,7 +241,7 @@ const UserProfileScreen = ({navigation}) => {
                   navigation.navigate("Home")
                 }}
               >
-                <Feather name="phone-call" size={24} color="white" />
+                <Ionicons name="exit-outline" size={24} color="black" />
               </CallButton>
             </ButtonContainer>
             {modalVisible && (
@@ -262,12 +263,12 @@ const UserProfileScreen = ({navigation}) => {
                   onChangeText={(txt) => {
                     tweetTxt = txt;
                   }}
-                  defaultValue={"Enter your Tweet"}
+                  defaultValue={InnerText[9]}
                 ></TextInput>
                 <TouchableOpacity
-                  style={{ height: 40, maxWidth: 50, borderWidth: 2 }}
+                  style={{ height: 40, maxWidth: 50, borderWidth: 2, textAlign: 'center', justifyContent:'center' }}
                   onPress={async () => {
-                   if(tweetTxt != ""){
+                   if(tweetTxt != InnerText[9]){
                     fetch("http://192.168.1.242:3000/addTweet", {
                       method: "POST",
                       headers: {
@@ -282,10 +283,10 @@ const UserProfileScreen = ({navigation}) => {
                     setModalVisibility(false);
                     dispatch(increment())
                   }
-                  else alert("Enter your tweet")
+                  else alert(InnerText[10])
                   }}
                 >
-                  <Text>Post</Text>
+                  <Text style={{textAlign: 'center', justifyContent:'center'}}>Post</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -301,7 +302,7 @@ const UserProfileScreen = ({navigation}) => {
               }}
             >
               <Text style={{ color:tweetState== 1 ? "#43a8f0" : "#000000" }}>
-                Tweets
+              {InnerText[3]} 
               </Text>
             </Tabutton>
             <Tabutton
@@ -314,7 +315,7 @@ const UserProfileScreen = ({navigation}) => {
               }}
             >
               <Text style={{color:tweetState== 2 ? "#43a8f0" : "#000000" }}>
-                Tweets & replies
+              {InnerText[4]} 
               </Text>
             </Tabutton>
           </Tab>
@@ -326,9 +327,6 @@ const UserProfileScreen = ({navigation}) => {
             <TweetList></TweetList>
           </ScrollView>
         </ImageBackground>
-        <PlusButton onPress={async () => {}}>
-          <Ionicons name="add-circle-outline" size={38} color="black" />
-        </PlusButton>
       </Container>
     );
   } else if (Profile == null || image == null) {
@@ -356,7 +354,7 @@ flex: 1;
 align-items: center;
     justify-content: center;
   padding: 14px 16px;
-  borderRightWidth: 2;
+  borderRightWidth: 2px;
   borderRightColor: #000000;
 `;
 
@@ -365,7 +363,8 @@ const Avatar = styled.Image`
   border-radius: 50px;
   width: 60px;
   height: 60px;
-  border: solid 2px #ffffff;
+  borderWidth: 2px;
+  borderColor: #ffffff;
 `;
 
 const FullName = styled.Text`
@@ -411,18 +410,6 @@ const SubContainer = styled.View`
   background: #ffffff;
   padding: 25px;
   padding-bottom: 0px;
-`;
-
-const PlusButton = styled.TouchableOpacity`
-  position: absolute;
-  bottom: 5%;
-  right: 5%;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50px;
-  width: 64px;
-  height: 64px;
-  background: #2a86ff;
 `;
 
 UserProfileScreen.navigationOptions = {

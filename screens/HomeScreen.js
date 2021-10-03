@@ -10,6 +10,9 @@ import { useSelector, useDispatch } from 'react-redux'
 const HomeScreen = ({ navigation }) => {
   const count = useSelector((state) => state.counter.value)
   
+  const language = navigator.language
+  const InnerText = language == "en" ? ["Search...", 'People that you follow:'] : ["Поиск...", 'Те, кого вы читаете:'];
+
   const [update,setUpdate] = useState(count)
   const [profile,setProfile] = useState(null)
   const [date, setDate] = useState('')
@@ -65,24 +68,22 @@ const HomeScreen = ({ navigation }) => {
     <MiniProfile profile={item} navigation={navigation}/>
   );
 
-  const [txt, setText] = useState("Search...")
+  const [txt, setText] = useState(InnerText[0])
 
   const FollowsList = () => {
     return trueUser.follows.map((follow) => (
       <MiniProfile profile={follow} navigation={navigation}></MiniProfile>
     ));
   };
-console.log(trueUser)
   if(profile != null) {
   return (
     <Container>
       <TextInput style={{fontSize: 20, borderRadius: 40, backgroundColor: "#DADADA", paddingLeft: 10, marginBottom: 10}} value={txt} onChangeText={(text)=>{setText(text);(setUser(text).then((answer)=> {console.log(answer);setList(answer)}))}}></TextInput>
-      <ScrollView>
-        {console.log(txt)}
-        {txt != "" &&
+        {txt != "" && txt != InnerText[0] &&
         <FlatList data={list}
         renderItem={renderItem}
         keyExtractor={item => item.id}></FlatList>}
+        <ScrollView>
         <Group
           groupTitle={date}
           items={profile}
@@ -91,12 +92,9 @@ console.log(trueUser)
         />
         {!!trueUser &&
         <View>
-        <GroupTitle>People that you follow:</GroupTitle>
+        <GroupTitle>{InnerText[1]}</GroupTitle>
         <FollowsList></FollowsList></View>}
       </ScrollView>
-      <PlusButton>
-        <Ionicons name="add-circle-outline" size={38} color="black" />
-      </PlusButton>
     </Container>
   );
 } else {return (<View></View>)}
@@ -113,18 +111,6 @@ padding-bottom: 10px;
   font-weight: 800;
   font-size: 22px;
   color: #000000;
-`;
-
-const PlusButton = styled.TouchableOpacity`
-  position: absolute;
-  bottom: 5%;
-  right: 5%;
-  align-items: center;
-  justify-content: center;
-  border-radius: 64px;
-  width: 64px;
-  height: 64px;
-  background: #2a86ff;
 `;
 
 HomeScreen.navigationOptions = {

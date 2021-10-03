@@ -12,7 +12,8 @@ import { CommonActions } from '@react-navigation/native';
 const LoginScreen = ({ navigation }) => {
   const count = useSelector((state) => state.counter.value)
   const dispatch = useDispatch()
-  console.log(count)
+  const language = navigator.language
+  const InnerText = language == "en" ? ["Username", 'Password', 'Log In'] : ["Логин", 'Пароль',"Войти"];
 
   const [name, setName] = useState(null)
   const [pass, setPass] = useState(null)
@@ -21,22 +22,21 @@ const LoginScreen = ({ navigation }) => {
         <View style={styles.container}>
         <TextInput
           style={styles.input}
-          placeholder='Username'
+          placeholder={InnerText[0]}
           autoCapitalize="none"
           placeholderTextColor='white'
           onChangeText={(text)=>{setName(text)}}
         />
         <TextInput
           style={styles.input}
-          placeholder='Password'
+          placeholder={InnerText[1]}
           secureTextEntry={true}
           autoCapitalize="none"
           placeholderTextColor='white'
           onChangeText={(text)=>{setPass(text)}}
         />
-        <Button onPress={()=>{dispatch(increment())}}/>
         <Button
-          title='Sign Up'
+          title={InnerText[2]}
           onPress={async ()=>{if(name != null && pass != null) { await fetch("http://192.168.1.242:3000/login", {
             method: 'POST',
             headers: {
@@ -53,7 +53,6 @@ const LoginScreen = ({ navigation }) => {
         });
         navigation.dispatch(CommonActions.goBack());
         dispatch(increment())
-        console.log("CUCK")
         } else alert("Введите данные")}}
         />
       </View>

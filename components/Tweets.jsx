@@ -21,9 +21,8 @@ const Tweets = ({ text, profile, image, crossBool, tweetState }) => {
   const [like, setLike] = useState(false)
   useEffect(()=>{
     setUpdate(count)
-    const getUser = async () => {
+    const getProfile = async () => {
       const userName = await AsyncStorage.getItem("Login");
-      if (username != null) {
       const user = await fetch("http://192.168.1.242:3000/getUser", {
         method: "POST",
         headers: {
@@ -34,9 +33,8 @@ const Tweets = ({ text, profile, image, crossBool, tweetState }) => {
       });
       return user.json();
     };
-    getUser().then((person) => {
+    getProfile().then((person) => {
       setUser(person);})
-    }
   }, [count])
 
   if(user != null){
@@ -44,7 +42,6 @@ const Tweets = ({ text, profile, image, crossBool, tweetState }) => {
   if(user.likes.find( x => x.tweetTxt === text.tweetTxt)){setLike(true)}
     }
   }
-
   if(tweetState == 1 && trueState == 1 || trueState == 2){
   return (
     <Container>
@@ -63,7 +60,7 @@ const Tweets = ({ text, profile, image, crossBool, tweetState }) => {
               body: JSON.stringify({
                 name: user.login,
                 tweet: text,
-              }),}); setLike(false)}}><AntDesign style={{paddingLeft: 5}} name="heart" size={16} color="red" /></TouchableOpacity>}{!like && !crossBool && user != null && <TouchableOpacity onPress={()=>{fetch("http://192.168.1.242:3000/likeTweet", {method: "POST", headers: {
+              }),}); setLike(false); dispatch(increment); dispatch(increment)}}><AntDesign style={{paddingLeft: 5}} name="heart" size={16} color="red" /></TouchableOpacity>}{!like && !crossBool && user != null && <TouchableOpacity onPress={()=>{fetch("http://192.168.1.242:3000/likeTweet", {method: "POST", headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
               },
@@ -114,7 +111,7 @@ const Tweets = ({ text, profile, image, crossBool, tweetState }) => {
                       body: JSON.stringify({
                         name: user.login,
                         tweet: text,
-                      }),}); setLike(false)}}><AntDesign style={{paddingLeft: 5}} name="heart" size={16} color="red" /></TouchableOpacity>}{!like && !crossBool && user != null && <TouchableOpacity onPress={()=>{fetch("http://192.168.1.242:3000/likeTweet", {method: "POST", headers: {
+                      }),}); setLike(false); dispatch(increment)}}><AntDesign style={{paddingLeft: 5}} name="heart" size={16} color="red" /></TouchableOpacity>}{!like && !crossBool && user != null && <TouchableOpacity onPress={()=>{fetch("http://192.168.1.242:3000/likeTweet", {method: "POST", headers: {
                         Accept: "application/json",
                         "Content-Type": "application/json",
                       },
