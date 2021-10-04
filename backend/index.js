@@ -3,7 +3,7 @@ const express = require('express');
 const app = express()
 const PORT = 3000;
 const mongoose = require("mongoose");
-const MONGO_URL = "mongodb+srv://AIE:12345@christappdb.1dqq4.mongodb.net/ChristAppDB?retryWrites=true&w=majority"
+const MONGO_URL = "mongodb+srv://{GET THE CORRECT URL ON MONGODB.COM}@christappdb.1dqq4.mongodb.net/ChristAppDB?retryWrites=true&w=majority"
 const User = require('./models/User')
 const multer = require('multer')
 const storage = multer.diskStorage({
